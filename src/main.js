@@ -26,12 +26,14 @@ import {
 // @name linkedin-to-jsonresume-bookmarklet
 // @author Joshua Tzucker
 // ==/Bookmarklet==
-
 // @ts-ignore
+
+
 window.LinkedinToResumeJson = (() => {
     // private
     /** @type {ResumeSchemaStable} */
     let _outputJsonStable = JSON.parse(JSON.stringify(resumeJsonTemplateStable));
+    //console.log(_outputJsonStable);
     /** @type {ResumeSchemaLatest} */
     let _outputJsonLatest = JSON.parse(JSON.stringify(resumeJsonTemplateLatest));
     /** @type {ResumeSchemaBeyondSpec} */
@@ -59,6 +61,9 @@ window.LinkedinToResumeJson = (() => {
     let _scrolledToLoad = false;
     const _toolPrefix = 'jtzLiToResumeJson';
     const _stylesInjected = false;
+
+
+
 
     /**
      * Builds a mini-db out of a LI schema obj
@@ -816,6 +821,7 @@ window.LinkedinToResumeJson = (() => {
         return false;
     };
 
+
     LinkedinToResumeJson.prototype.parseViaInternalApiFullSkills = async function parseViaInternalApiFullSkills() {
         try {
             const fullSkillsInfo = await this.voyagerFetch(_voyagerEndpoints.fullSkills);
@@ -1234,11 +1240,15 @@ window.LinkedinToResumeJson = (() => {
         });
     };
 
+
+
+
     /** @param {SchemaVersion} version */
     LinkedinToResumeJson.prototype.parseAndGetRawJson = async function parseAndGetRawJson(version = 'stable') {
         await this.tryParse();
         let rawJson = version === 'stable' ? _outputJsonStable : _outputJsonLatest;
         // If beta, combine with latest
+        //console.log(rawJson);
         if (version === 'beta') {
             rawJson = {
                 ...rawJson,
@@ -1247,6 +1257,18 @@ window.LinkedinToResumeJson = (() => {
         }
         return rawJson;
     };
+
+    //work 
+
+    /** @param {SchemaVersion} version */
+    LinkedinToResumeJson.prototype.showToConsoleJson = async function showToConsoleJson(version = "stable") {
+        const rawJson = await this.parseAndGetRawJson(version);
+        return rawJson;
+    }
+
+
+
+    // work end
 
     /** @param {SchemaVersion} version */
     LinkedinToResumeJson.prototype.parseAndDownload = async function parseAndDownload(version = 'stable') {
@@ -1271,6 +1293,9 @@ window.LinkedinToResumeJson = (() => {
             alert('Could not extract JSON from current page. Make sure you are on a profile page that you have access to');
         }
     };
+
+
+
 
     LinkedinToResumeJson.prototype.closeModal = function closeModal() {
         const modalWrapperId = `${_toolPrefix}_modalWrapper`;
