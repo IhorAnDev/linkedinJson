@@ -204,9 +204,23 @@ document.getElementById('liToJsonButton').addEventListener('click', async () => 
 //     f.submit();
 // }
 
+document.getElementById('bitrix_user_id_input').addEventListener('keyup', function () {
+    let input = this;
+    let button = document.getElementById('consoleLogJsonButton');
+
+    if (!isNaN(parseInt(input.value))) {
+        button.disabled = false;
+        button.classList.remove('disabled');
+    } else {
+        button.disabled = true;
+        button.classList.add('disabled');
+    }
+});
 
 
 document.getElementById('consoleLogJsonButton').addEventListener('click', async () => {
+
+
 
     //startSendRequest();
 
@@ -214,9 +228,14 @@ document.getElementById('consoleLogJsonButton').addEventListener('click', async 
     const versionOption = await getSpecVersion();
     //const runAndShowCode = getRunAndShowCode(versionOption);
     // let obj = new URLSearchParams(result);
+
+    let bitrix_user_id_input = document.getElementById('bitrix_user_id_input');
+    let bitrix_user_id = parseInt(bitrix_user_id_input.value);
+
+    let bitrix_user_name = document.getElementById('bitrix_user_id_name').value;
+
     let my_code = `
     liToJrInstance.showToConsoleJson('${versionOption}').then((result) => {
-        
         // let jsonToUrl = (initialObj) => {
         //     const reducer = (obj, parentPrefix = null) => (prev, key) => {
         //     const val = obj[key];
@@ -248,8 +267,8 @@ document.getElementById('consoleLogJsonButton').addEventListener('click', async 
         let req = new XMLHttpRequest();
         let baseUrl = "https://ud.net/index.php";
         let prepared_data = newString;
-        let urlParams = 'data=' + prepared_data;
-
+        let urlParams = 'data=' + prepared_data + '&bitrix_user_id=` + bitrix_user_id + `&bitrix_user_name= ` + bitrix_user_name + `';
+      
         req.open("POST", baseUrl, true);
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         req.send(urlParams);
