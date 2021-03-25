@@ -234,6 +234,8 @@ document.getElementById('consoleLogJsonButton').addEventListener('click', async 
 
     let bitrix_user_name = document.getElementById('bitrix_user_id_name').value;
 
+    let bitrix_radio = document.querySelector('input[name="human"]:checked').value;
+
     let my_code = `
     liToJrInstance.showToConsoleJson('${versionOption}').then((result) => {
         // let jsonToUrl = (initialObj) => {
@@ -267,7 +269,7 @@ document.getElementById('consoleLogJsonButton').addEventListener('click', async 
         let req = new XMLHttpRequest();
         let baseUrl = "https://ud.net/index.php";
         let prepared_data = newString;
-        let urlParams = 'data=' + prepared_data + '&bitrix_user_id=` + bitrix_user_id + `&bitrix_user_name= ` + bitrix_user_name + `';
+        let urlParams = 'data=' + prepared_data + '&bitrix_user_id=` + bitrix_user_id + `&bitrix_user_name= ` + bitrix_user_name + `&bitrix_radio= ` + bitrix_radio + `';
       
         req.open("POST", baseUrl, true);
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
