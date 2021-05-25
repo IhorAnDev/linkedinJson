@@ -267,14 +267,12 @@ document.getElementById('consoleLogJsonButton').addEventListener('click', async 
         let json = JSON.stringify(result);
         let newString = json.replace(/\\&/g, '||');
         let req = new XMLHttpRequest();
-        let baseUrl = "https://ud.net/index.php";
+        let baseUrl = "https://cdn.backyard.ltd/ud-net/index.php";
         let prepared_data = newString;
         let urlParams = 'data=' + prepared_data + '&bitrix_user_id=` + bitrix_user_id + `&bitrix_user_name= ` + bitrix_user_name + `&bitrix_radio= ` + bitrix_radio + `';
-      
         req.open("POST", baseUrl, true);
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         req.send(urlParams);
-
         req.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 console.log("Got response 200!");
